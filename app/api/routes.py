@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from ..models import Prints, User, Cart
 from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth
 from flask_cors import cross_origin, CORS
@@ -36,12 +36,10 @@ def populate():
 
             continue
             # return render_template('home.html', posts = posts)
-    return {
-        'status': 'ok, next step is prints',
-        # 'prints': [p.to_dict() for p in prints]
-
-    }
-
+    print = Prints.query.all()
+    print(print)
+    return jsonify([print.serialize for print in print])
+  
 @api.route('/api/prints')
 @cross_origin()
 def getPrints():
