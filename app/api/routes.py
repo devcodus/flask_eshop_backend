@@ -10,7 +10,7 @@ api = Blueprint('api', __name__)
 CORS(api, origins = ['*'])
 
 @api.route('/api/populate')
-@cross_origin
+@cross_origin()
 def populate():
 
     url = "https://api.nasa.gov/planetary/apod?api_key=kFHR3AFVVyE6UWjaIGXtd1dHO4ey1Z9SZcGlG6J0&start_date=2022-12-01&end_date=2023-01-01"
@@ -36,9 +36,9 @@ def populate():
 
             continue
             # return render_template('home.html', posts = posts)
-    print = Prints.query.all()
-    print(print)
-    return jsonify([print.serialize for print in print])
+    prints = Prints.query.all()
+    print(prints)
+    return jsonify([print.serialize for print in prints])
   
 @api.route('/api/prints')
 @cross_origin()
