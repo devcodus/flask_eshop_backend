@@ -26,18 +26,16 @@ class User(db.Model, UserMixin):
         self.admin = True
         db.session.commit()
 
-class Mugs(db.Model):
+class Prints(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     img_url = db.Column(db.String, nullable=False)
-    caption = db.Column(db.String(1000))
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, title, img_url, caption, price, quantity):
+    def __init__(self, title, img_url, price, quantity):
         self.title = title
         self.img_url = img_url
-        self.caption = caption
         self.price = price
         self.quantity = quantity
 
@@ -50,17 +48,17 @@ class Mugs(db.Model):
         db.session.commit()
         
     def to_dict(self):
-        return {"id": self.id, "title": self.title, "img_url": self.img_url, "caption": self.caption, "price": self.price, "quantity": self.quantity}
+        return {"id": self.id, "title": self.title, "img_url": self.img_url, "price": self.price, "quantity": self.quantity}
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    mug_id = db.Column(db.Integer, db.ForeignKey('mugs.id'), nullable=False)
+    print_id = db.Column(db.Integer, db.ForeignKey('prints.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
 
-    def __init__(self, user_id, mug_id, quantity=1):
+    def __init__(self, user_id, print_id, quantity=1):
         self.user_id = user_id
-        self.mug_id = mug_id
+        self.print_id = print_id
         self.quantity = quantity
 
     def update_quantity(self, quantity):
