@@ -7,7 +7,7 @@ import requests
 
 
 api = Blueprint('api', __name__)
-CORS(api, origins = ['*'])
+
 
 @api.route('/api/populate', methods = ['GET'])
 @cross_origin()
@@ -78,7 +78,7 @@ def getCart():
     }
 
 @api.route('/api/posters/<int:poster_id>')
-# @cross_origin()
+@cross_origin()
 def getPoster(poster_id):
     poster = Posters.query.get(poster_id)
     if poster:
@@ -167,6 +167,7 @@ def signUpPageAPI():
     }
 
 @api.route('/api/login', methods=["POST"])
+@cross_origin()
 @basic_auth.login_required
 def getToken():
     user = basic_auth.current_user()

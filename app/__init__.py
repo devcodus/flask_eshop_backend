@@ -10,7 +10,9 @@ from .api.routes import api
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app)
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 db.init_app(app)
 migrate = Migrate(app,db)
