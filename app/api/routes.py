@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..models import Prints, User, Cart
+from ..models import Posters, User, Cart
 from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth
 from flask_cors import cross_origin, CORS
 from flask_login import current_user
@@ -9,7 +9,7 @@ import requests
 api = Blueprint('api', __name__)
 CORS(api, origins = ['*'])
 
-@api.route('/api/populate')
+@api.route('/api/populate', methods = ['GET'])
 @cross_origin()
 def populate():
 
@@ -26,34 +26,40 @@ def populate():
             monthly_apod['img_url'] = apod['url']
             monthly_apod['price'] = 20 # RNG here next
 
-            title = monthly_apod['item_name']
+            title = monthly_apod['title']
             img_url = monthly_apod['img_url']
             price =  monthly_apod['price']
+            quantity = 100
 
-            print = Prints(title, img_url, price)
-            print.saveToDB()
+            poster = Posters(title, img_url, price, quantity)
+            poster.saveToDB()
 
 
             continue
             # return render_template('home.html', posts = posts)
-    prints = Prints.query.all()
-    print(prints)
-    return jsonify([print.serialize for print in prints])
+    posters = Posters.query.all()
+    print(posters)
+    # return jsonify([posters.to_dict() for poster in posters]), 200, {'Content-Type': 'application/json'}
+    return {
+        'status': 'ok',
+        'totalResults': len(posters),
+        'posters': [p.to_dict() for p in posters]
+    }
   
-@api.route('/api/prints')
+@api.route('/api/posters')
 @cross_origin()
 def getPrints():
-    prints = Prints.query.all()
-    print(prints)
+    posters = Posters.query.all()
+    print(posters)
 
-    new_prints = []
-    for p in prints:
-        new_prints.append(p.to_dict())
+    new_posters = []
+    for p in posters:
+        new_posters.append(p.to_dict())
     
     return {
         'status': 'ok',
-        'totalResults': len(prints),
-        'prints': [p.to_dict() for p in prints]
+        'totalResults': len(posters),
+        'posters': [p.to_dict() for p in posters]
     }
 
 @api.route('/api/cart')
@@ -68,19 +74,19 @@ def getCart():
     return {
         'status': 'ok',
         'totalResults': len(cart),
-        'prints': [p.to_dict() for p in cart]
+        'posters': [p.to_dict() for p in cart]
     }
 
-@api.route('/api/prints/<int:print_id>')
+@api.route('/api/posters/<int:poster_id>')
 # @cross_origin()
-def getPrint(print_id):
-    print = Prints.query.get(print_id)
-    if print:
+def getPoster(poster_id):
+    poster = Posters.query.get(poster_id)
+    if poster:
         return {
             'status': 'ok',
             'totalResults': 1,
-            'print': 
-            print.to_dict()
+            'poster': 
+            poster.to_dict()
         }
     else:
         return {

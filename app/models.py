@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
         self.admin = True
         db.session.commit()
 
-class Prints(db.Model):
+class Posters(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     img_url = db.Column(db.String, nullable=False)
@@ -53,12 +53,12 @@ class Prints(db.Model):
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    print_id = db.Column(db.Integer, db.ForeignKey('prints.id'), nullable=False)
+    poster_id = db.Column(db.Integer, db.ForeignKey('posters.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
 
-    def __init__(self, user_id, print_id, quantity=1):
+    def __init__(self, user_id, poster_id, quantity=1):
         self.user_id = user_id
-        self.print_id = print_id
+        self.poster_id = poster_id
         self.quantity = quantity
 
     def update_quantity(self, quantity):
