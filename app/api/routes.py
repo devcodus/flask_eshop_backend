@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ..models import Posters, User, Cart
-from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth
+from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth, token_auth
 from flask_cors import cross_origin, CORS
 from flask_login import current_user
 import requests
@@ -62,21 +62,6 @@ def getPrints():
         'posters': [p.to_dict() for p in posters]
     }
 
-@api.route('/api/cart')
-@cross_origin()
-def getCart():
-    cart = Cart.query.all()
-
-    cart_items = []
-    for p in cart:
-        cart_items.append(p.to_dict())
-    
-    return {
-        'status': 'ok',
-        'totalResults': len(cart),
-        'posters': [p.to_dict() for p in cart]
-    }
-
 @api.route('/api/posters/<int:poster_id>')
 @cross_origin()
 def getPoster(poster_id):
@@ -94,7 +79,66 @@ def getPoster(poster_id):
             'message': 'The post you are looking for does not exist.'
         }
 
+# @api.route('/api/cart')
+# @cross_origin()
+# def getCart():
+#     cart = Cart.query.all()
 
+#     cart_items = []
+#     for p in cart:
+#         cart_items.append(p.to_dict())
+    
+#     return {
+#         'status': 'ok',
+#         'totalResults': len(cart),
+#         'posters': [p.to_dict() for p in cart]
+#     }
+
+# @api.post('/api/cart/add')
+# # @token_auth.login_required
+# def addToCartAPI():
+#     data = request.json
+#     user = token_auth.current_user()
+
+#     poster_id = data['posterId']
+#     poster = Posters.query.get(poster_id)
+
+#     c = Cart(user.id, poster_id)
+#     c.saveToDB()
+    
+#     return {
+#         'status': 'ok',
+#         'message': f'Succesfully added "{poster.poster_title}" to your cart!'
+#     }
+
+# @shop.get('/api/cart/get')
+# @token_auth.login_required
+# def getCartAPI():
+#     user = token_auth.current_user()
+#     cart = [Product.query.get(c.product_id).to_dict() for c in user.cart]
+    
+#     return {
+#         'status': 'ok',
+#         'cart': cart
+#     }
+
+# @shop.post('/api/cart/remove')
+# @token_auth.login_required
+# def removeFromCartAPI():
+#     data = request.json
+#     user = token_auth.current_user()
+
+#     product_id = data['productId']
+    
+
+#     c = Cart.query.filter_by(user_id=user.id).filter_by(product_id=product_id).first()
+#     print(c)
+#     c.deleteFromDB()
+    
+#     return {
+#         'status': 'ok',
+#         'message': 'Succesfully removed item from cart!'
+#     }
 
 ########## CONVERT THIS TO ADDTOCART ROUTE##########
 
