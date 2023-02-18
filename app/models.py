@@ -54,9 +54,9 @@ class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     poster_id = db.Column(db.Integer, db.ForeignKey('posters.id'), nullable=False)
-    quantity = db.Column(db.Integer, default=1)
+    quantity = db.Column(db.Integer)
 
-    def __init__(self, user_id, poster_id, quantity=1):
+    def __init__(self, user_id, poster_id, quantity):
         self.user_id = user_id
         self.poster_id = poster_id
         self.quantity = quantity
