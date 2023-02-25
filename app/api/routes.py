@@ -173,5 +173,6 @@ def getToken():
     user = basic_auth.current_user()
     return {
         'status': 'ok',
+        'message': 'Login successful!',
         'user': user.to_dict()
     }

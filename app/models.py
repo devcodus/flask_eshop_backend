@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
-        self.apitoken = token_hex(16)
+        # self.apitoken = token_hex(16)
 
     def saveToDB(self):
         db.session.add(self)
@@ -25,6 +25,14 @@ class User(db.Model, UserMixin):
     def makeAdmin(self):
         self.admin = True
         db.session.commit()
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username' : self.username,
+            'email' : self.email,
+            # 'apitoken' : self.apitoken
+        }
 
 class Posters(db.Model):
     id = db.Column(db.Integer, primary_key=True)
