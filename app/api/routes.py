@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ..models import Posters, User, Cart
-from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth
+from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth, token_auth
 from flask_cors import cross_origin, CORS
 from flask_login import current_user
 import requests
@@ -75,6 +75,30 @@ def getCart():
         'status': 'ok',
         'totalResults': len(cart),
         'posters': [p.to_dict() for p in cart]
+    }
+
+@api.post('/api/cart/add')
+@token_auth.login_required
+def addToCartAPI():
+    data = request.json
+    user = token_auth.current_user()
+    poster_id = data['posterId']
+    # poster = Posters.query.get(id)
+    c = Cart(user.id, poster_id)
+    c.saveToDB()
+    return {
+        'status': 'ok',
+        # 'message': f'Succesfully added "{poster.title}" to your cart!'
+    }
+
+@api.get('/api/cart/get')
+@token_auth.login_required
+def getCartAPI():
+    user = token_auth.current_user()
+    cart = [Product.query.get(c.product_id).to_dict() for c in user.cart]
+    return {
+        'status': 'ok',
+        'cart': cart
     }
 
 @api.route('/api/posters/<int:poster_id>')
