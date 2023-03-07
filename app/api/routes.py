@@ -89,17 +89,66 @@ def addToCartAPI():
     return {
         'status': 'ok',
         # 'message': f'Succesfully added "{poster.title}" to your cart!'
-    }
+    }   
 
 @api.get('/api/cart/get')
 @token_auth.login_required
 def getCartAPI():
     user = token_auth.current_user()
-    cart = [Product.query.get(c.product_id).to_dict() for c in user.cart]
+    cart = [Posters.query.get(c.poster_id).to_dict() for c in user.cart]
     return {
         'status': 'ok',
         'cart': cart
     }
+
+@api.post('/api/cart/remove')
+@token_auth.login_required
+def removeFromCartAPI():
+    data = request.json
+    user = token_auth.current_user()
+
+    poster_id = data['posterId']
+    
+
+    c = Cart.query.filter_by(user_id=user.id).filter_by(poster_id=poster_id).first()
+    print(c)
+    c.deleteFromDB()
+    
+    return {
+        'status': 'ok',
+        'message': 'Succesfully removed item from cart!'
+    }
+
+# @api.post('/api/cart/removeall')
+# @token_auth.login_required
+# def removeAllFromCartAPI():
+#     data = request.json
+#     user = token_auth.current_user()
+
+#     # poster_id = data['posterId']
+    
+
+#     c = Cart.query.filter_by(user_id=user.id).all()
+#     print(c)
+#     c.deleteFromDB()
+    
+#     return {
+#         'status': 'ok',
+#         'message': 'Succesfully removed item from cart!'
+#     }
+
+@api.post('/api/cart/removeall')
+@token_auth.login_required
+def removeAllFromCartAPI():
+    user = token_auth.current_user()
+    c = Cart.query.filter_by(user_id=user.id).all() #this was cart_items as in an array
+    for item in c:
+        item.deleteFromDB()
+    return {
+        'status': 'ok',
+        'message': 'Successfully removed all items from cart!'
+    }
+
 
 @api.route('/api/posters/<int:poster_id>')
 @cross_origin()
