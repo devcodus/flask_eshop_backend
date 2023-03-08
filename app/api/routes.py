@@ -31,8 +31,9 @@ def populate():
             img_url = monthly_apod['img_url']
             price =  monthly_apod['price']
             quantity = 100
+            media_type = monthly_apod['media_type']
 
-            poster = Posters(title, img_url, price, quantity)
+            poster = Posters(title, img_url, price, quantity, media_type)
             poster.saveToDB()
 
 
