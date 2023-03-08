@@ -13,7 +13,7 @@ api = Blueprint('api', __name__)
 @cross_origin()
 def populate():
 
-    url = "https://api.nasa.gov/planetary/apod?api_key=kFHR3AFVVyE6UWjaIGXtd1dHO4ey1Z9SZcGlG6J0&start_date=2022-02-01&end_date=2023-03-01"
+    url = "https://api.nasa.gov/planetary/apod?api_key=kFHR3AFVVyE6UWjaIGXtd1dHO4ey1Z9SZcGlG6J0&start_date=2022-01-01&end_date=2023-02-01"
 
     monthly_apod = {}
 
@@ -25,6 +25,7 @@ def populate():
             monthly_apod['title'] = apod['title']
             monthly_apod['img_url'] = apod['url']
             monthly_apod['price'] = 20 # RNG here next
+            monthly_apod['media_type']=apod['media_type']
 
             title = monthly_apod['title']
             img_url = monthly_apod['img_url']

@@ -41,12 +41,14 @@ class Posters(db.Model):
     img_url = db.Column(db.String, nullable=False)
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    media_type = db.Column(db.String)
 
-    def __init__(self, title, img_url, price, quantity):
+    def __init__(self, title, img_url, price, quantity, media_type):
         self.title = title
         self.img_url = img_url
         self.price = price
         self.quantity = quantity
+        self.media_type = media_type
 
     def saveToDB(self):
         db.session.add(self)
@@ -57,7 +59,7 @@ class Posters(db.Model):
         db.session.commit()
         
     def to_dict(self):
-        return {"id": self.id, "title": self.title, "img_url": self.img_url, "price": self.price, "quantity": self.quantity}
+        return {"id": self.id, "title": self.title, "img_url": self.img_url, "price": self.price, "quantity": self.quantity, 'media_type':self.media_type}
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
