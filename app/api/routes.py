@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Flask, redirect
 from ..models import Posters, User, Cart
 from ..apiauthhelper import basic_auth_required, token_auth_required, basic_auth, token_auth
 from flask_cors import cross_origin, CORS
 from flask_login import current_user
 import requests
+import stripe
+stripe.api_key = "sk_test_51MbYoLGCKLBcLjfz8atvrJ3XPwNASH764iatWoEmQzLIJbWIIofExqGTT4ZTKBkYPJg793ZQhTVdcKio7fy7aXWy00xgUjliC4"
 
 
 api = Blueprint('api', __name__)
@@ -40,7 +42,7 @@ def populate():
             continue
             # return render_template('home.html', posts = posts)
     posters = Posters.query.all()
-    print(posters)
+    # print(posters)
     # return jsonify([posters.to_dict() for poster in posters]), 200, {'Content-Type': 'application/json'}
     return {
         'status': 'ok',
@@ -52,7 +54,7 @@ def populate():
 @cross_origin()
 def getPrints():
     posters = Posters.query.all()
-    print(posters)
+    # print(posters)
 
     new_posters = []
     for p in posters:
@@ -63,6 +65,34 @@ def getPrints():
         'totalResults': len(posters),
         'posters': [p.to_dict() for p in posters]
     }
+
+@api.route('/api/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    data = request.form
+    print(data)
+    line_items = []
+    for title, qty in data.items():
+        line_items.append({
+            'price_data': {
+            "currency": "usd",
+            "product_data": {"name": title},
+            "unit_amount": 2000,
+            },
+            'quantity': qty
+        }
+        )
+    print(line_items)
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items= line_items,
+            mode='payment',
+            success_url='http://localhost:3000/home' + '?success=true', # route once payment goes through
+            cancel_url='http://localhost:3000/shop' + '?canceled=true',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
 
 @api.route('/api/cart')
 @cross_origin()
