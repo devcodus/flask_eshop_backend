@@ -8,18 +8,18 @@ You are currently in the Flask backend repo. If you haven't already, please clic
 
 In the project directory, you can run:
 
-### `python3 -m venv my_venv` in order to instantiate a virtual environment
+#### `python3 -m venv my_venv` in order to instantiate a virtual environment
 
-<mark> ## then, if on a mac: </mark>
-### run `source my_venv/bin/activate`
-### next run `pip install -r requirements.txt`
-### finally run `flask run`
+## then, if on a mac: 
+#### run `source my_venv/bin/activate`
+#### next run `pip install -r requirements.txt`
+#### finally run `flask run`
 
-<mark> ## if on a pc: </mark>
-### first go to the requirements.txt file and replace psycopg2-binary==2.9.5 with psycopg2==2.9.5
-### then run `my_venv/scripts/activate`
-### next run `pip install -r requirements.txt`
-### finally run `flask run`
+## if on a pc: 
+#### first go to the requirements.txt file and replace psycopg2-binary==2.9.5 with psycopg2==2.9.5
+#### then run `my_venv/scripts/activate`
+#### next run `pip install -r requirements.txt`
+#### finally run `flask run`
 
 
 
