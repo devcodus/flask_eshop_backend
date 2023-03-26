@@ -1,1 +1,1 @@
-gunicoen "app:app"
+gunicorn "app:app"
